@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Users;
 
 class UsersController extends Controller
 {
+    private $users;
+    public function __construct(){
+        $this->users = new Users();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -60,5 +66,18 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function login(Request $request)
+    {
+        //
+        $data = [
+            'account' => $request->account,
+            'password' => $request->password
+        ];
+        $login = $this->users->login($data);
+        
+       return response()->json($login);
+       
     }
 }

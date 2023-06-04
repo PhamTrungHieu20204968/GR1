@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Users extends Model
 {
@@ -14,4 +15,24 @@ class Users extends Model
     protected $hidden = [
         'password'
     ];
+
+
+    public function getAllUsers() {
+        $users = DB::table($this->table)->get();
+        return $users;
+    }
+
+    public function login($data){
+        $user = DB::table($this->table)
+        ->select('*')
+        ->where([
+            'account' => $data['account'],
+            'password' => $data['password'],
+        ])
+        ->get();
+
+        if(!empty($user)) return true;
+        else return false;
+       
+    }
 }
