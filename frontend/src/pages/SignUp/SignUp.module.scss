@@ -1,9 +1,10 @@
-.login {
+.signup {
   background-color: #f9f9f9;
   width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .header {
@@ -83,7 +84,7 @@
   font-weight: 600;
   line-height: 5.2rem;
   border-radius: 10px;
-  margin: 24px 0 16px 0;
+  margin: 16px 0 16px 0;
 
   &:hover {
     cursor: pointer;
@@ -123,15 +124,5 @@
     font-weight: 600;
     color: #43546f;
     margin-left: 4px;
-  }
-}
-
-.forgot-pass-link {
-  text-decoration: underline;
-  color: #43546f;
-  margin: 0;
-  text-align: center;
-  &:hover {
-    cursor: pointer;
   }
 }

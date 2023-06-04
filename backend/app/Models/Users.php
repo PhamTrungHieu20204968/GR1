@@ -31,8 +31,21 @@ class Users extends Model
         ])
         ->get();
 
-        if(!empty($user)) return true;
+        if(sizeof($user) > 0) return true;
         else return false;
+
+    }
+
+    public function insertData($data){
+        $status = DB::table($this->table)->insert([
+            'account' => $data['account'],
+            'password' => $data['password'],
+            'name' => $data['name'],
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
        
+
+        return $status;
     }
 }

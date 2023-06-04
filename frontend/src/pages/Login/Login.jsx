@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { Container, Row, Col } from "react-bootstrap";
@@ -39,7 +39,7 @@ function Login() {
     }
     if (!password) {
       setPasswordError(true);
-      setPasswordErrorMessage("Vui lòng nhập tài khoản");
+      setPasswordErrorMessage("Vui lòng nhập mật khẩu");
     }
 
     if (account && password) {
@@ -49,10 +49,19 @@ function Login() {
           password: password,
         })
         .then((res) => {
-          if (res.data) {
+          if (res.data === true) {
             Swal.fire({ title: "Đăng nhập thành công!", icon: "success" });
             navigate("/");
           } else {
+            Swal.fire({
+              title: "Đăng nhập thất bại!",
+              text: "Vui lòng kiểm tra lại tài khoản và mật khẩu",
+              icon: "error",
+            });
+            setAccountError(true);
+            setAccountErrorMessage("");
+            setPasswordError(true);
+            setPasswordErrorMessage("");
           }
         })
         .catch((e) => {
@@ -66,14 +75,14 @@ function Login() {
       <Container>
         <Row className="justify-content-md-center align-items-center">
           <Col md="4">
-            <h1 className={cx("header")}>Log in</h1>
+            <h1 className={cx("header")}>Đăng Nhập</h1>
             <div className={cx("form")}>
               <label className={cx("label")} htmlFor="account">
                 Tài khoản
               </label>
               <input
                 id="account"
-                type="email"
+                type="text"
                 className={cx("form-input", accountError && "form-error")}
                 value={account}
                 onChange={handleChangeAccount}
@@ -110,7 +119,7 @@ function Login() {
               )}
 
               <div className={cx("form-btn")} onClick={handleSubmit}>
-                Login
+                Đăng nhập
               </div>
 
               <div className={cx("social-login")}>
@@ -127,7 +136,7 @@ function Login() {
               </div>
 
               <p className={cx("navigate-sign-up-text")}>
-                Chưa có tài khoản? <a href="/SignUp">Đăng ký</a>
+                Chưa có tài khoản? <Link to="/SignUp">Đăng ký</Link>
               </p>
               <h3 className={cx("forgot-pass-link")}>Quên mật khẩu?</h3>
             </div>

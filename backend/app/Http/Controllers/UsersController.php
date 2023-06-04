@@ -75,9 +75,24 @@ class UsersController extends Controller
             'account' => $request->account,
             'password' => $request->password
         ];
-        $login = $this->users->login($data);
+        $res = $this->users->login($data);
         
-       return response()->json($login);
+       return response()->json($res);
+       
+    }
+
+    public function signUp(Request $request)
+    {
+        //
+        $data = [
+            'account' => $request->account,
+            'password' => $request->password,
+            'name' => $request->name,
+        ];
+
+        $res = $this->users->insertData($data);
+        
+       return response()->json($res);
        
     }
 }
