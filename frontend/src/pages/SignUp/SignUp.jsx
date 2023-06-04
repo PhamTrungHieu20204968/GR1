@@ -65,8 +65,12 @@ function SignUp() {
         .then((res) => {
           console.log(res);
           if (res.data === true) {
-            Swal.fire({ title: "Đăng ký thành công!", icon: "success" });
-            navigate("/");
+            Swal.fire({
+              title: "Đăng ký thành công!",
+              text: "Hãy đăng nhập lại tài khoản",
+              icon: "success",
+            });
+            navigate("/Login");
           } else {
             Swal.fire({
               title: "Đăng ký thất bại!",
