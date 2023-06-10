@@ -17,13 +17,17 @@ function SignUp() {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [repassword, setRepassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showRepassword, setShowRepassword] = useState(false);
   const [accountError, setAccountError] = useState(false);
   const [accountErrorMessage, setAccountErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState("");
+  const [repasswordError, setRepasswordError] = useState(false);
+  const [repasswordErrorMessage, setRepasswordErrorMessage] = useState("");
 
   const handleChangeAccount = (e) => {
     setAccountError(false);
@@ -40,53 +44,48 @@ function SignUp() {
     setName(e.target.value);
   };
 
+  const handleChangeRepassword = (e) => {
+    setRepasswordError(false);
+    setRepassword(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
-    if (!name) {
-      setNameError(true);
-      setNameErrorMessage("Vui lòng nhập họ tên");
-    }
-
-    if (!account) {
-      setAccountError(true);
-      setAccountErrorMessage("Vui lòng nhập tài khoản");
-    }
-    if (!password) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Vui lòng nhập mật khẩu");
-    }
-
-    if (account && password && name) {
-      await axios
-        .post("http://localhost:8000/api/user/signup", {
-          name: name,
-          account: account,
-          password: password,
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data === true) {
-            Swal.fire({
-              title: "Đăng ký thành công!",
-              text: "Hãy đăng nhập lại tài khoản",
-              icon: "success",
-            });
-            navigate("/Login");
-          } else {
-            Swal.fire({
-              title: "Đăng ký thất bại!",
-              text: "Tên tài khoản đã tồn tại",
-              icon: "error",
-            });
-            setAccountError(true);
-            setAccountErrorMessage("");
-            setPasswordError(true);
-            setPasswordErrorMessage("");
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    await axios
+      .post("http://localhost:8000/api/user/signup", {
+        name: name,
+        account: account,
+        password: password,
+        repassword: repassword,
+      })
+      .then((res) => {
+        if (res.data === true) {
+          Swal.fire({
+            title: "Đăng ký thành công!",
+            text: "Hãy đăng nhập lại tài khoản",
+            icon: "success",
+          });
+          navigate("/");
+        }
+      })
+      .catch((e) => {
+        const errors = e.response.data.errors;
+        if (errors.name) {
+          setNameError(true);
+          setNameErrorMessage(errors.name[0]);
+        }
+        if (errors.account) {
+          setAccountError(true);
+          setAccountErrorMessage(errors.account[0]);
+        }
+        if (errors.password) {
+          setPasswordError(true);
+          setPasswordErrorMessage(errors.password[0]);
+        }
+        if (errors.repassword) {
+          setRepasswordError(true);
+          setRepasswordErrorMessage(errors.repassword[0]);
+        }
+      });
   };
 
   return (
@@ -96,7 +95,7 @@ function SignUp() {
           <Col md="4">
             <h1 className={cx("header")}>Đăng ký</h1>
             <div className={cx("form")}>
-              <label className={cx("label")} htmlFor="account">
+              <label className={cx("label")} htmlFor="name">
                 Họ và tên
               </label>
               <input
@@ -122,7 +121,7 @@ function SignUp() {
               {accountError && (
                 <p className={cx("error-message")}>{accountErrorMessage}</p>
               )}
-              <label className={cx("label")} htmlFor="account">
+              <label className={cx("label")} htmlFor="password">
                 Mật khẩu
               </label>
 
@@ -148,6 +147,33 @@ function SignUp() {
               </div>
               {passwordError && (
                 <p className={cx("error-message")}>{passwordErrorMessage}</p>
+              )}
+
+              <label className={cx("label")} htmlFor="repassword">
+                Nhập lại mật khẩu
+              </label>
+              <div className={cx("form-input-wrapper")}>
+                <input
+                  id="repassword"
+                  type={showRepassword ? "text" : "password"}
+                  className={cx("form-input", repasswordError && "form-error")}
+                  value={repassword}
+                  onChange={handleChangeRepassword}
+                />
+                {showRepassword ? (
+                  <EyeInvisibleTwoTone
+                    className={cx("show-icon")}
+                    onClick={() => setShowRepassword(false)}
+                  />
+                ) : (
+                  <EyeTwoTone
+                    className={cx("show-icon")}
+                    onClick={() => setShowRepassword(true)}
+                  />
+                )}
+              </div>
+              {repasswordError && (
+                <p className={cx("error-message")}>{repasswordErrorMessage}</p>
               )}
 
               <div className={cx("form-btn")} onClick={handleSubmit}>

@@ -33,41 +33,38 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    if (!account) {
-      setAccountError(true);
-      setAccountErrorMessage("Vui lòng nhập tài khoản");
-    }
-    if (!password) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Vui lòng nhập mật khẩu");
-    }
-
-    if (account && password) {
-      await axios
-        .post("http://localhost:8000/api/user/login", {
-          account: account,
-          password: password,
-        })
-        .then((res) => {
-          if (res.data === true) {
-            Swal.fire({ title: "Đăng nhập thành công!", icon: "success" });
-            navigate("/");
-          } else {
-            Swal.fire({
-              title: "Đăng nhập thất bại!",
-              text: "Vui lòng kiểm tra lại tài khoản và mật khẩu",
-              icon: "error",
-            });
-            setAccountError(true);
-            setAccountErrorMessage("");
-            setPasswordError(true);
-            setPasswordErrorMessage("");
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    await axios
+      .post("http://localhost:8000/api/user/login", {
+        account: account,
+        password: password,
+      })
+      .then((res) => {
+        if (res.data === true) {
+          Swal.fire({ title: "Đăng nhập thành công!", icon: "success" });
+          navigate("/");
+        } else {
+          Swal.fire({
+            title: "Đăng nhập thất bại!",
+            text: "Vui lòng kiểm tra lại tài khoản và mật khẩu",
+            icon: "error",
+          });
+          setAccountError(true);
+          setAccountErrorMessage("");
+          setPasswordError(true);
+          setPasswordErrorMessage("");
+        }
+      })
+      .catch((e) => {
+        const errors = e.response.data.errors;
+        if (errors.account) {
+          setAccountError(true);
+          setAccountErrorMessage(errors.account[0]);
+        }
+        if (errors.password) {
+          setPasswordError(true);
+          setPasswordErrorMessage(errors.password[0]);
+        }
+      });
   };
 
   return (
@@ -90,7 +87,7 @@ function Login() {
               {accountError && (
                 <p className={cx("error-message")}>{accountErrorMessage}</p>
               )}
-              <label className={cx("label")} htmlFor="account">
+              <label className={cx("label")} htmlFor="password">
                 Mật khẩu
               </label>
 
