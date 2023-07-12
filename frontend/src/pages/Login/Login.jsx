@@ -9,6 +9,7 @@ import { EyeTwoTone, EyeInvisibleTwoTone } from "@ant-design/icons";
 import styles from "./Login.module.scss";
 import LogoFaceBook from "../../assets/images/facebook.png";
 import LogoGoogle from "../../assets/images/Gmail_Logo_512px.png";
+import { useStateContext } from "../../contexts/ContextProvider";
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +22,7 @@ function Login() {
   const [accountErrorMessage, setAccountErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const { setToken, setUser } = useStateContext();
 
   const handleChangeAccount = (e) => {
     setAccountError(false);
@@ -39,7 +41,9 @@ function Login() {
         password: password,
       })
       .then((res) => {
-        if (res.data === true) {
+        if (res.data !== false) {
+          setUser(res.data.user);
+          setToken(res.data.token);
           Swal.fire({ title: "Đăng nhập thành công!", icon: "success" });
           navigate("/");
         } else {
@@ -55,14 +59,18 @@ function Login() {
         }
       })
       .catch((e) => {
-        const errors = e.response.data.errors;
-        if (errors.account) {
-          setAccountError(true);
-          setAccountErrorMessage(errors.account[0]);
-        }
-        if (errors.password) {
-          setPasswordError(true);
-          setPasswordErrorMessage(errors.password[0]);
+        const response = e.response;
+        if (response) {
+          console.log(response);
+          const errors = response.data.errors;
+          if (errors.account) {
+            setAccountError(true);
+            setAccountErrorMessage(errors.account[0]);
+          }
+          if (errors.password) {
+            setPasswordError(true);
+            setPasswordErrorMessage(errors.password[0]);
+          }
         }
       });
   };

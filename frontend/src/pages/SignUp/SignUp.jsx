@@ -9,6 +9,7 @@ import { EyeTwoTone, EyeInvisibleTwoTone } from "@ant-design/icons";
 import styles from "./SignUp.module.scss";
 import LogoFaceBook from "../../assets/images/facebook.png";
 import LogoGoogle from "../../assets/images/Gmail_Logo_512px.png";
+import { useStateContext } from "../../contexts/ContextProvider";
 
 const cx = classNames.bind(styles);
 
@@ -28,6 +29,8 @@ function SignUp() {
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [repasswordError, setRepasswordError] = useState(false);
   const [repasswordErrorMessage, setRepasswordErrorMessage] = useState("");
+
+  const { setToken, setUser } = useStateContext();
 
   const handleChangeAccount = (e) => {
     setAccountError(false);
@@ -50,6 +53,7 @@ function SignUp() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     await axios
       .post("http://localhost:8000/api/user/signup", {
         name: name,
@@ -57,33 +61,36 @@ function SignUp() {
         password: password,
         repassword: repassword,
       })
-      .then((res) => {
-        if (res.data === true) {
-          Swal.fire({
-            title: "Đăng ký thành công!",
-            text: "Hãy đăng nhập lại tài khoản",
-            icon: "success",
-          });
-          navigate("/");
-        }
+      .then(({ data }) => {
+        setUser(data.user);
+        setToken(data.token);
+        Swal.fire({
+          title: "Đăng ký thành công!",
+          text: "Hãy đăng nhập lại tài khoản",
+          icon: "success",
+        });
+        navigate("/");
       })
-      .catch((e) => {
-        const errors = e.response.data.errors;
-        if (errors.name) {
-          setNameError(true);
-          setNameErrorMessage(errors.name[0]);
-        }
-        if (errors.account) {
-          setAccountError(true);
-          setAccountErrorMessage(errors.account[0]);
-        }
-        if (errors.password) {
-          setPasswordError(true);
-          setPasswordErrorMessage(errors.password[0]);
-        }
-        if (errors.repassword) {
-          setRepasswordError(true);
-          setRepasswordErrorMessage(errors.repassword[0]);
+      .catch((err) => {
+        const response = err.response;
+        if (response && response.status === 422) {
+          const errors = response.data.errors;
+          if (errors.name) {
+            setNameError(true);
+            setNameErrorMessage(errors.name[0]);
+          }
+          if (errors.account) {
+            setAccountError(true);
+            setAccountErrorMessage(errors.account[0]);
+          }
+          if (errors.password) {
+            setPasswordError(true);
+            setPasswordErrorMessage(errors.password[0]);
+          }
+          if (errors.repassword) {
+            setRepasswordError(true);
+            setRepasswordErrorMessage(errors.repassword[0]);
+          }
         }
       });
   };

@@ -23,29 +23,34 @@ class Users extends Model
     }
 
     public function login($data){
-        $user = DB::table($this->table)
-        ->select('*')
+        if (DB::table($this->table)
         ->where([
             'account' => $data['account'],
             'password' => $data['password'],
-        ])
-        ->get();
-
-        if(sizeof($user) > 0) return true;
-        else return false;
+        ])->exists()) {
+            $user = DB::table($this->table)
+            ->where([
+                'account' => $data['account'],
+                'password' => $data['password'],
+            ])
+            ->first();
+            $token = bin2hex(random_bytes(16));
+       
+            return ['user' => $user,'token' => $token];
+        }else return false;
 
     }
 
     public function insertData($data){
-        $status = DB::table($this->table)->insert([
-            'account' => $data['account'],
-            'password' => $data['password'],
-            'name' => $data['name'],
-            'created_at' => date('Y-m-d H:i:s')
+
+        $user = Users::create([
+                'account' => $data['account'],
+                'password' => $data['password'],
+                'name' => $data['name'],
         ]);
 
+        $token = bin2hex(random_bytes(16));
        
-
-        return $status;
+        return ['user' => $user,'token' => $token];
     }
 }

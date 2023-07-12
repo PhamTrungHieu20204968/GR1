@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\SignupRequest;
 use Illuminate\Http\Request;
 use App\Models\Users;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
@@ -93,8 +96,6 @@ class UsersController extends Controller
     $res = $this->users->login($data);
     
    return response()->json($res);
-
-       
     }
 
     public function signUp(Request $request)
@@ -129,8 +130,18 @@ class UsersController extends Controller
         ];
 
         $res = $this->users->insertData($data);
+
         
        return response()->json($res);
-       
+    }
+
+
+    public function logout(Request $request)
+    {
+        //
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        return response('',204);
     }
 }
