@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Works;
 use Illuminate\Http\Request;
 
 class WorksController extends Controller
 {
+    private $works;
+    public function __construct(){
+        $this->works = new Works();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -17,9 +22,20 @@ class WorksController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $data = [
+            'userId'=>$request->userId,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'type'=>$request->type,
+            'timeStart'=>$request->timeStart,
+            'timeEnd'=>$request->timeEnd,
+        ];
+        $res = $this->works->insertData($data);
+
+        return response()->json($res);
     }
 
     /**

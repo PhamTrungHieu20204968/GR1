@@ -1,0 +1,45 @@
+.home {
+  margin-top: var(--header-height);
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  padding: 0 32px;
+  overflow: hidden;
+}
+
+.content {
+  padding-top: 16px;
+  .header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.header-title {
+  font-size: 2rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.header-title + .header-title {
+  margin-left: 16px;
+}
+
+.header-title.active {
+  color: blue;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.body {
+  padding: 16px 0;
+  height: calc(100vh - 128px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

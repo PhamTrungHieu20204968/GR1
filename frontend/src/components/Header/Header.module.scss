@@ -1,0 +1,23 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: var(--header-height);
+  width: 100%;
+  justify-content: flex-end;
+  padding: 0 32px;
+  z-index: 100;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+
+  .header-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    .create-btn {
+      margin-right: 16px;
+    }
+  }
+}
