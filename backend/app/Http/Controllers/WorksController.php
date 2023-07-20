@@ -77,4 +77,23 @@ class WorksController extends Controller
     {
         //
     }
+
+    public function getAll(Request $request)
+    {
+        //
+        $data =  $this->works->getAll($request->userId);
+
+        return response()->json($data);
+
+    }
+
+    public function deleteOne(Request $request)
+    {
+        //
+        $data =  $this->works->deleteOne($request->workId);
+
+        return response()->json($data);
+
+    }
+    
 }

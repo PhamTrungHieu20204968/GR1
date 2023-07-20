@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
-import { Input, Modal } from "antd";
+import { Input, message } from "antd";
+import axios from "axios";
 
 import { useStateContext } from "../../contexts/ContextProvider";
 import Header from "../../components/Header/Header";
@@ -17,21 +18,41 @@ function Home() {
   const { user, token } = useStateContext();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [works, setWorks] = useState([]);
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const onSearch = (value) => console.log(value);
-
   const showModal = () => {
     setOpenModal(true);
   };
 
+  const getWorks = async () => {
+    await axios
+      .post("http://localhost:8000/api/work/get", {
+        userId: user.id,
+      })
+      .then((res) => {
+        setWorks(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
-    if (!token) {
+    getWorks();
+  }, [JSON.stringify(works)]);
+
+  useEffect(() => {
+    if (!token || !user.id) {
       return navigate("/Login");
     }
   });
   return (
     <div className={cx("home")}>
-      <Header showModal={showModal}></Header>
+      {contextHolder}
+      <Header showModal={showModal} user={user}></Header>
       <div className={cx("content")}>
         <div className={cx("header")}>
           <div className={cx("header-left")}>
@@ -50,13 +71,20 @@ function Home() {
           </div>
         </div>
         <div className={cx("body")}>
-          <ListWorks showModal={showModal}></ListWorks>
+          <ListWorks
+            works={works}
+            showModal={showModal}
+            setWorks={setWorks}
+            messageApi={messageApi}
+          ></ListWorks>
         </div>
       </div>
       <CreateWorkForm
         openModal={openModal}
         setOpenModal={setOpenModal}
         userId={user.id}
+        setWorks={setWorks}
+        messageApi={messageApi}
       ></CreateWorkForm>
     </div>
   );

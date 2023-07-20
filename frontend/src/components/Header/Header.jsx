@@ -8,9 +8,8 @@ import UserMenu from "./UserMenu/UserMenu";
 
 const cx = classNames.bind(styles);
 
-function Header({ showModal }) {
+function Header({ showModal, user }) {
   const [openMenu, setOpenMenu] = useState(false);
-
   const handleOpenChange = (newOpen) => {
     setOpenMenu(newOpen);
   };
@@ -28,7 +27,7 @@ function Header({ showModal }) {
         <Popover
           content={<UserMenu setOpenMenu={setOpenMenu}></UserMenu>}
           trigger="click"
-          title="User name"
+          title={user.name}
           open={openMenu}
           onOpenChange={handleOpenChange}
         >

@@ -14,14 +14,6 @@ class Works extends Model
 
 
     public function insertData($data){
-    // $status = DB::table('works')->insert([
-    //     'user_id'=>$data['userId'],
-    //     'name'=>$data['name'],
-    //     'description'=>$data['description'],
-    //     'type'=>$data['type'],
-    //     'start'=>$data['timeStart'],
-    //     'end'=>$data['timeEnd'],
-    // ]);
     $status = Works::create([
             'user_id'=>$data['userId'],
             'name'=>$data['name'],
@@ -32,5 +24,20 @@ class Works extends Model
     ]);
 
     return $status;
+    }
+
+    public function getAll($userId){
+        $data = DB::table('works')
+        ->where('user_id','=',$userId)
+        ->get();
+        return $data;
+    }
+
+    public function deleteOne($workId){
+        $deleted = DB::table('works')
+        ->where('id', '=', $workId)
+        ->delete();
+
+        return $deleted;
     }
 }

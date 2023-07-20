@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { useState } from "react";
-import { Input, DatePicker, Form, Select, Modal, message } from "antd";
+import { Input, DatePicker, Form, Select, Modal } from "antd";
 import axios from "axios";
 
 import styles from "./CreateWorkForm.scss";
@@ -36,12 +36,17 @@ const rangeConfig = {
   ],
 };
 
-function CreateWorkForm({ openModal, setOpenModal, userId }) {
+function CreateWorkForm({
+  openModal,
+  setOpenModal,
+  userId,
+  setWorks,
+  messageApi,
+}) {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
 
   const submitData = async (data) => {
     const { name, description, time, type } = data;
@@ -55,7 +60,7 @@ function CreateWorkForm({ openModal, setOpenModal, userId }) {
         timeEnd: time[1].toDate("Y-m-d H:i:s"),
       })
       .then((res) => {
-        console.log(res);
+        setWorks((prev) => [...prev, res.data]);
         messageApi.open({
           type: "success",
           content: "Tạo thành công!",
@@ -100,7 +105,6 @@ function CreateWorkForm({ openModal, setOpenModal, userId }) {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      {contextHolder}
       <Form
         name="create_work_form"
         {...formItemLayout}
