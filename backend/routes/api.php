@@ -26,6 +26,7 @@ Route::prefix('work')->group(function () {
     Route::post('/create', [WorksController::class, 'create']);
     Route::post('/get', [WorksController::class, 'getAll']);
     Route::post('/delete', [WorksController::class, 'deleteOne']);
+    Route::post('/update', [WorksController::class, 'updateOne']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

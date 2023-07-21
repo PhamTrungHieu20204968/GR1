@@ -95,5 +95,23 @@ class WorksController extends Controller
         return response()->json($data);
 
     }
+
+    public function updateOne(Request $request)
+    {
+        //
+        $data = [
+            'id' => $request->workId,
+            'userId'=>$request->userId,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'type'=>$request->type,
+            'timeStart'=>$request->timeStart,
+            'timeEnd'=>$request->timeEnd,
+        ];
+        $res =  $this->works->updateOne($data);
+
+        return response()->json($data);
+
+    }
     
 }

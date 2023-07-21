@@ -30,7 +30,7 @@ function Home() {
   const getWorks = async () => {
     await axios
       .post("http://localhost:8000/api/work/get", {
-        userId: user.id,
+        userId: user.id || 1,
       })
       .then((res) => {
         setWorks(res.data);
@@ -44,11 +44,11 @@ function Home() {
     getWorks();
   }, [JSON.stringify(works)]);
 
-  useEffect(() => {
-    if (!token || !user.id) {
-      return navigate("/Login");
-    }
-  });
+  // useEffect(() => {
+  //   if (!token || !user.id) {
+  //     return navigate("/Login");
+  //   }
+  // });
   return (
     <div className={cx("home")}>
       {contextHolder}

@@ -40,4 +40,21 @@ class Works extends Model
 
         return $deleted;
     }
+
+    public function updateOne($data){
+        $affected = DB::table('works')
+            ->where('id','=',$data['id'])
+            ->where('user_id','=',$data['userId'])
+            ->update([
+                'name'=>$data['name'],
+                'user_id'=>$data['userId'],
+                'description'=>$data['description'],
+                'type'=>$data['type'],
+                'start'=>date('Y-m-d H:i:s' , strtotime($data['timeStart'])),
+                'end'=>date('Y-m-d H:i:s' , strtotime($data['timeEnd'])),
+            ]);
+
+        return $affected;
+    }
+    
 }

@@ -7,14 +7,24 @@ import {
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import { useState } from "react";
 
 import styles from "./WorkCard.module.scss";
 import "./WorkLibrary.scss";
+import InfoWorkForm from "../../components/InfoWorkForm/InfoWorkForm";
 
 const cx = classNames.bind(styles);
 
 function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
-  const handleDelete = async () => {
+  const [openInfor, setOpenInfor] = useState(false);
+  const [onEdit, setOnEdit] = useState(false);
+
+  const showInfor = (e) => {
+    setOpenInfor(true);
+  };
+
+  const handleDelete = async (event) => {
+    event.stopPropagation();
     await axios
       .post("http://localhost:8000/api/work/delete", {
         workId: work.id,
@@ -46,11 +56,17 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
             flexDirection: "column",
           }}
           actions={[
-            <EditOutlined key="edit" />,
+            <EditOutlined
+              key="edit"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOnEdit(true);
+                showInfor();
+              }}
+            />,
             <Popconfirm
               title="Xóa công việc"
               description="Bạn có chắc chắn muốn xóa?"
-              onConfirm={handleDelete}
               icon={
                 <QuestionCircleOutlined
                   style={{
@@ -58,11 +74,18 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
                   }}
                 />
               }
+              onConfirm={handleDelete}
+              onCancel={(event) => event.stopPropagation()}
+              onPopupClick={(event) => event.stopPropagation()}
             >
-              <DeleteOutlined key="delete" />
+              <DeleteOutlined
+                key="delete"
+                onClick={(event) => event.stopPropagation()}
+              />
             </Popconfirm>,
           ]}
           hoverable
+          onClick={showInfor}
         >
           <div className={cx("card-body")}>
             <p className={cx("description")}>
@@ -85,6 +108,15 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
           </div>
         </Card>
       )}
+
+      <InfoWorkForm
+        openModal={openInfor}
+        callBack={[setOpenInfor, setOnEdit]}
+        work={work}
+        setWorks={setWorks}
+        messageApi={messageApi}
+        onEdit={onEdit}
+      ></InfoWorkForm>
     </div>
   );
 }

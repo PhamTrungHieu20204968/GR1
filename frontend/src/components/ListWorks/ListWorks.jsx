@@ -11,7 +11,7 @@ function ListWorks({ showModal, works, setWorks, messageApi }) {
     <Row gutter={[16, 16]} style={{ flexWrap: "wrap" }}>
       {works?.map((work, index) => {
         return (
-          <Col xs={24} sm={12} md={12} lg={6} xl={4} order={2}>
+          <Col key={index} xs={24} sm={12} md={12} lg={6} xl={4} order={2}>
             <WorkCard
               key={index}
               work={work}
@@ -25,6 +25,7 @@ function ListWorks({ showModal, works, setWorks, messageApi }) {
       <Col xs={24} sm={12} md={12} lg={6} xl={4} order={1}>
         <WorkCard type="add" showModal={showModal}></WorkCard>
       </Col>
+     
     </Row>
   );
 }
