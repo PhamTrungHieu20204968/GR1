@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, DatePicker, Form, Select, Modal } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 import * as dayjs from "dayjs";
 
@@ -38,7 +39,7 @@ const rangeConfig = {
   ],
 };
 
-function CreateWorkForm({
+function InfoWorkForm({
   openModal,
   callBack,
   work,
@@ -50,11 +51,32 @@ function CreateWorkForm({
   const { Option } = Select;
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
+  const [role, setRole] = useState("1");
+  const [shareList, setShareList] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const roles = [
+    {
+      value: "1",
+      label: "Xem",
+    },
+    {
+      value: "2",
+      label: "Chỉnh sửa",
+    },
+    {
+      value: "3",
+      label: "Xóa",
+    },
+  ];
 
   const { user } = useStateContext();
   const [setOpenModal, setOnEdit] = callBack;
 
   const submitData = async (data) => {
+    if (!onEdit) return;
+
     const { name, description, time, type } = data;
     await axios
       .post("http://localhost:8000/api/work/update", {
@@ -109,10 +131,53 @@ function CreateWorkForm({
     console.log("Clicked cancel button");
     setOpenModal(false);
   };
+  const getShareList = async () => {
+    setLoading(true);
+    await axios
+      .post("http://localhost:8000/api/share/getShareList", {
+        workId: work?.id,
+      })
+      .then((res) => {
+        const _shareList = [];
+        res.data.forEach((item) => {
+          _shareList.push({ value: item.account, label: item.account });
+        });
+        setShareList(_shareList);
+        setRole(res.data[0]?.role);
+        form.setFieldValue("share", _shareList);
+        form.setFieldValue("role", res.data[0]?.role);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    await getUser();
+    setLoading(false);
+  };
+
+  const getUser = async () => {
+    await axios
+      .post("http://localhost:8000/api/user/getAll", {
+        userId: 1,
+      })
+      .then((res) => {
+        const _options = [];
+        res.data.forEach((item) => {
+          _options.push({ value: item.account, label: item.account });
+        });
+        setOptions(_options);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+    getShareList();
+  }, []);
 
   return (
     <Modal
-      title="Tạo công việc"
+      title="Thông tin công việc"
       open={openModal}
       onOk={handleOk}
       confirmLoading={confirmLoading}
@@ -122,55 +187,110 @@ function CreateWorkForm({
         if (onEdit) setOnEdit(false);
       }}
     >
-      <Form
-        name="create_work_form"
-        {...formItemLayout}
-        style={{
-          maxWidth: 600,
-        }}
-        form={form}
-      >
-        <Form.Item
-          name="name"
-          label="Tên công việc"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập!",
-            },
-          ]}
-          initialValue={work?.name}
+      {!loading ? (
+        <Form
+          name="create_work_form"
+          {...formItemLayout}
+          style={{
+            maxWidth: 600,
+          }}
+          form={form}
         >
-          <Input disabled={!onEdit} />
-        </Form.Item>
-        <Form.Item
-          name="time"
-          label="Thời gian"
-          {...rangeConfig}
-          initialValue={[dayjs(work?.start), dayjs(work?.end)]}
-        >
-          <RangePicker
-            showTime
-            format="YYYY-MM-DD HH:mm:ss"
-            disabled={!onEdit}
-          />
-        </Form.Item>
-        <Form.Item name="type" label="Loại công việc" initialValue={work?.type}>
-          <Select disabled={!onEdit}>
-            <Option value="1">Công việc cá nhân</Option>
-            <Option value="2">Công việc chia sẻ</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="description"
-          label="Mô tả"
-          initialValue={work?.description}
-        >
-          <Input.TextArea disabled={!onEdit} />
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="name"
+            label="Tên công việc"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập!",
+              },
+            ]}
+            initialValue={work?.name}
+          >
+            <Input disabled={!onEdit} />
+          </Form.Item>
+          <Form.Item
+            name="time"
+            label="Thời gian"
+            {...rangeConfig}
+            initialValue={[dayjs(work?.start), dayjs(work?.end)]}
+          >
+            <RangePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              disabled={!onEdit}
+            />
+          </Form.Item>
+          <Form.Item
+            name="type"
+            label="Loại công việc"
+            initialValue={work?.type}
+          >
+            <Select disabled={!onEdit}>
+              <Option value="1">Công việc cá nhân</Option>
+              <Option value="2">Công việc chia sẻ</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Mô tả"
+            initialValue={work?.description}
+          >
+            <Input.TextArea disabled={!onEdit} />
+          </Form.Item>
+          {work?.type === "2" && (
+            <>
+              <Form.Item
+                name="role"
+                label="Phân quyền"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập!",
+                  },
+                ]}
+                initialValue={role}
+              >
+                <Select
+                  disabled={!onEdit}
+                  style={{
+                    width: "100%",
+                  }}
+                  placeholder="Chọn quyền..."
+                  options={roles}
+                />
+              </Form.Item>
+              <Form.Item
+                name="share"
+                label="Chia sẻ"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập!",
+                  },
+                ]}
+                initialValue={shareList}
+              >
+                <Select
+                  disabled={!onEdit}
+                  mode="tags"
+                  style={{
+                    width: "100%",
+                  }}
+                  placeholder="Email..."
+                  options={options}
+                />
+              </Form.Item>
+            </>
+          )}
+        </Form>
+      ) : (
+        <div className={cx("loading-icon")}>
+          <LoadingOutlined />
+        </div>
+      )}
     </Modal>
   );
 }
 
-export default CreateWorkForm;
+export default InfoWorkForm;

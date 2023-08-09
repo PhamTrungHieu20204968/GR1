@@ -18,26 +18,43 @@ function Home() {
   const { user, token } = useStateContext();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
-  const [works, setWorks] = useState([]);
-
+  const [works, setWorks] = useState();
+  const [tab, setTab] = useState("1");
   const [messageApi, contextHolder] = message.useMessage();
+  const [myWork, setMyWork] = useState([]);
+  const [shareWork, setShareWork] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const onSearch = (value) => console.log(value);
   const showModal = () => {
     setOpenModal(true);
   };
-
   const getWorks = async () => {
+    setLoading(true);
     await axios
       .post("http://localhost:8000/api/work/get", {
         userId: user.id || 1,
       })
       .then((res) => {
         setWorks(res.data);
+        classifyWorks(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
+    setLoading(false);
+  };
+
+  const classifyWorks = (works) => {
+    const _mywork = [],
+      _shareworks = [];
+    works?.forEach((item, index, arr) => {
+      if (item.type === "1") {
+        _mywork.push(item);
+      } else _shareworks.push(item);
+    });
+    setMyWork(_mywork);
+    setShareWork(_shareworks);
   };
 
   useEffect(() => {
@@ -56,10 +73,18 @@ function Home() {
       <div className={cx("content")}>
         <div className={cx("header")}>
           <div className={cx("header-left")}>
-            <span className={cx("header-title", "active")}>
+            <span
+              className={cx("header-title", tab === "1" ? "active" : "")}
+              onClick={() => setTab("1")}
+            >
               Công việc của tôi
             </span>
-            <span className={cx("header-title")}>Công việc chia sẻ</span>
+            <span
+              className={cx("header-title", tab === "2" ? "active" : "")}
+              onClick={() => setTab("2")}
+            >
+              Công việc chia sẻ
+            </span>
           </div>
           <div className={cx("header-right")}>
             <Search
@@ -71,12 +96,14 @@ function Home() {
           </div>
         </div>
         <div className={cx("body")}>
-          <ListWorks
-            works={works}
-            showModal={showModal}
-            setWorks={setWorks}
-            messageApi={messageApi}
-          ></ListWorks>
+          {!loading && (
+            <ListWorks
+              works={tab === "1" ? myWork : shareWork}
+              showModal={showModal}
+              setWorks={setWorks}
+              messageApi={messageApi}
+            ></ListWorks>
+          )}
         </div>
       </div>
       <CreateWorkForm
@@ -85,6 +112,7 @@ function Home() {
         userId={user.id}
         setWorks={setWorks}
         messageApi={messageApi}
+        setTab={setTab}
       ></CreateWorkForm>
     </div>
   );

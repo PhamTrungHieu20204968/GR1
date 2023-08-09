@@ -23,11 +23,38 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
     setOpenInfor(true);
   };
 
-  const handleDelete = async (event) => {
+  const handleDelete = (event) => {
     event.stopPropagation();
+    if (work?.type === "1") {
+      deleteMyWork(work.id);
+    } else deleteShareWork(work.id);
+  };
+
+  const deleteMyWork = async (workId) => {
     await axios
       .post("http://localhost:8000/api/work/delete", {
-        workId: work.id,
+        workId,
+      })
+      .then((res) => {
+        setWorks((prev) => {
+          return prev.filter((item, index) => {
+            if (item.id !== work.id) return item;
+          });
+        });
+        messageApi.open({
+          type: "success",
+          content: "Xóa thành công!",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const deleteShareWork = async (workId) => {
+    await axios
+      .post("http://localhost:8000/api/work/deleteShare", {
+        workId,
       })
       .then((res) => {
         setWorks((prev) => {
@@ -109,14 +136,16 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
         </Card>
       )}
 
-      <InfoWorkForm
-        openModal={openInfor}
-        callBack={[setOpenInfor, setOnEdit]}
-        work={work}
-        setWorks={setWorks}
-        messageApi={messageApi}
-        onEdit={onEdit}
-      ></InfoWorkForm>
+      {openInfor && (
+        <InfoWorkForm
+          openModal={openInfor}
+          callBack={[setOpenInfor, setOnEdit]}
+          work={work}
+          setWorks={setWorks}
+          messageApi={messageApi}
+          onEdit={onEdit}
+        ></InfoWorkForm>
+      )}
     </div>
   );
 }

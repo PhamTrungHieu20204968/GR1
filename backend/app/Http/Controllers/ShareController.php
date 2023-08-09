@@ -1,11 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Share;
 
 use Illuminate\Http\Request;
 
 class ShareController extends Controller
 {
+    private $share;
+    public function __construct(){
+        $this->share = new Share();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -17,9 +22,10 @@ class ShareController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($data)
     {
         //
+        
     }
 
     /**
@@ -60,5 +66,13 @@ class ShareController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    
+    public function getShareList(Request $request)
+    {
+        //
+        $res = $this->share->getShareList($request->workId);
+
+        return response()->json($res);
     }
 }

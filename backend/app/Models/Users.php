@@ -53,4 +53,21 @@ class Users extends Model
        
         return ['user' => $user,'token' => $token];
     }
+
+    public function getUserId($email){
+
+        $user = DB::table('users')->where('account', $email)->first();
+       
+        return $user->id;
+    }
+
+    public function getAll($id){
+
+        $users = DB::table('users')
+        ->select('account')
+        ->where('id','<>',$id)
+        ->get();
+       
+        return $users;
+    }
 }

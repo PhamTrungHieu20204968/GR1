@@ -144,4 +144,13 @@ class UsersController extends Controller
 
         return response('',204);
     }
+
+    public function getAll(Request $request)
+    {
+        //
+
+         $list = $this->users->getAll($request->userId);
+
+        return response()->json($list);
+    }
 }
