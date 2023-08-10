@@ -43,7 +43,7 @@ class Works extends Model
 
     public function updateOne($data){
         $affected = DB::table('works')
-            ->where('id','=',$data['id'])
+            ->where('id','=',$data['workId'])
             ->where('user_id','=',$data['userId'])
             ->update([
                 'name'=>$data['name'],

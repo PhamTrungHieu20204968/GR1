@@ -96,9 +96,9 @@ class WorksController extends Controller
     public function deleteOne(Request $request)
     {
         //
-        if($request->type === "2"){
-            $deletedShareTable = $this->share->deleteWork($request->workId);
-        }
+        
+        $deletedShareTable = $this->share->deleteWork($request->workId);
+        
         $data =  $this->works->deleteOne($request->workId);
 
         return response()->json($data);
@@ -120,7 +120,7 @@ class WorksController extends Controller
     {
         //
         $data = [
-            'id' => $request->workId,
+            'workId' => $request->workId,
             'userId'=>$request->userId,
             'name'=>$request->name,
             'description'=>$request->description,
@@ -130,7 +130,10 @@ class WorksController extends Controller
         ];
         $res =  $this->works->updateOne($data);
 
-        return response()->json($data);
+       
+        $res2 = $this->share->deleteWork($data['workId']);
+
+        return response()->json($res);
 
     }
 
@@ -160,5 +163,33 @@ class WorksController extends Controller
         return response()->json($res1);
 
     }
-    
+
+    public function updateShare(Request $request)
+    {
+        //
+        $data = [
+            'workId'=>$request->workId,
+            'userId'=>$request->userId,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'type'=>$request->type,
+            'role'=>$request->role,
+            'share'=>$request->share,
+            'timeStart'=>$request->timeStart,
+            'timeEnd'=>$request->timeEnd,
+        ];
+
+        $shareData=[];
+        foreach ($data['share'] as $member) {
+            $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $data['workId'],'role' => $data['role']];
+            array_push($shareData,$item);
+        }
+        $res2 = $this->share->deleteWork($data['workId']);
+        $res3= $this->share->insertData($shareData);
+        $res1 = $this->works->updateOne($data);
+        
+
+        return response()->json($res3);
+
+    }
 }

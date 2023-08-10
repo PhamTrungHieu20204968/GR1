@@ -31,6 +31,7 @@ Route::prefix('work')->group(function () {
     Route::post('/deleteShare', [WorksController::class, 'deleteShare']);
     Route::post('/update', [WorksController::class, 'updateOne']);
     Route::post('/createShare', [WorksController::class, 'createShare']);
+    Route::post('/updateShare', [WorksController::class, 'updateShare']);
 });
 
 Route::prefix('share')->group(function () {

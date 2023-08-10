@@ -55,6 +55,7 @@ function InfoWorkForm({
   const [shareList, setShareList] = useState([]);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [workType, setWorkType] = useState(work.type);
 
   const roles = [
     {
@@ -105,6 +106,40 @@ function InfoWorkForm({
       });
   };
 
+  const updateShareWork = async (data) => {
+    if (!onEdit) return;
+
+    const { name, description, time, type, role, share } = data;
+    await axios
+      .post("http://localhost:8000/api/work/updateShare", {
+        workId: work.id,
+        userId: 1,
+        name,
+        description,
+        type,
+        role,
+        share,
+        timeStart: time[0].toDate("Y-m-d H:i:s"),
+        timeEnd: time[1].toDate("Y-m-d H:i:s"),
+      })
+      .then((res) => {
+        console.log(res);
+        setWorks((prev) => {
+          prev.filter((item) => {
+            if (item.id === work.id) return res.data;
+            return item;
+          });
+        });
+        messageApi.open({
+          type: "success",
+          content: "Sửa thành công!",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const handleOk = () => {
     if (!onEdit) setOpenModal(false);
     setConfirmLoading(true);
@@ -112,7 +147,9 @@ function InfoWorkForm({
       .validateFields()
       .then((values) => {
         try {
-          submitData(values);
+          if (values.type === "2") {
+            updateShareWork(values);
+          } else submitData(values);
           form.resetFields();
           setTimeout(() => {
             setOpenModal(false);
@@ -184,7 +221,7 @@ function InfoWorkForm({
       onCancel={handleCancel}
       okText={onEdit ? "Lưu" : "OK"}
       afterClose={() => {
-        if (onEdit) setOnEdit(false);
+        setOnEdit(false);
       }}
     >
       {!loading ? (
@@ -221,12 +258,8 @@ function InfoWorkForm({
               disabled={!onEdit}
             />
           </Form.Item>
-          <Form.Item
-            name="type"
-            label="Loại công việc"
-            initialValue={work?.type}
-          >
-            <Select disabled={!onEdit}>
+          <Form.Item name="type" label="Loại công việc" initialValue={workType}>
+            <Select disabled={!onEdit} onChange={(value) => setWorkType(value)}>
               <Option value="1">Công việc cá nhân</Option>
               <Option value="2">Công việc chia sẻ</Option>
             </Select>
@@ -238,7 +271,7 @@ function InfoWorkForm({
           >
             <Input.TextArea disabled={!onEdit} />
           </Form.Item>
-          {work?.type === "2" && (
+          {workType === "2" && (
             <>
               <Form.Item
                 name="role"
