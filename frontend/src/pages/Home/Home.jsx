@@ -25,7 +25,12 @@ function Home() {
   const [shareWork, setShareWork] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const onSearch = (value) => console.log(value);
+  const onSearch = (value) => {
+    const searchResult = works.filter((work) => {
+      return work.name.toUpperCase().includes(value.toUpperCase());
+    });
+    classifyWorks(searchResult);
+  };
   const showModal = () => {
     setOpenModal(true);
   };
