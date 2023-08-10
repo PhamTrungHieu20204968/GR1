@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admins;
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Http\Request;
 
 class AdminsController extends Controller
 {
+    private $admins;
+    public function __construct(){
+        $this->admins = new Admins();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -62,5 +69,30 @@ class AdminsController extends Controller
     {
         //
     }
-
+    
+    public function login(Request $request)
+    {
+        //
+        $rules = [
+            'account' => 'required',
+            'password' => 'required',
+        ];
+    
+        $messages = [
+            'account.required' => 'Vui lòng nhập tài khoản',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+        ];
+    
+        $validator = Validator::make($request->all(),$rules,$messages);
+    
+        $validator->validate();
+    
+        $data = [
+            'account' => $request->account,
+            'password' => $request->password
+        ];
+        $res = $this->admins->login($data);
+        
+       return response()->json($res);
+    }
 }
