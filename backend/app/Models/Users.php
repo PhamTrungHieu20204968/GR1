@@ -43,7 +43,7 @@ class Users extends Model
 
     public function insertData($data){
 
-        $user = Users::create([
+        $user = DB::table('users')->insert([
                 'account' => $data['account'],
                 'password' => $data['password'],
                 'name' => $data['name'],
@@ -67,6 +67,23 @@ class Users extends Model
         ->select('account')
         ->where('id','<>',$id)
         ->get();
+       
+        return $users;
+    }
+
+    public function getTable(){
+
+        $users = DB::table('users')
+        ->select('*')
+        ->get();
+       
+        return $users;
+    }
+
+    public function deleteOne($id){
+
+        $users = DB::table('users')
+        ->where('id', '=', $id)->delete();
        
         return $users;
     }

@@ -8,7 +8,7 @@ import UserMenu from "./UserMenu/UserMenu";
 
 const cx = classNames.bind(styles);
 
-function Header({ showModal, user }) {
+function Header({ showModal, user, admin = false }) {
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenChange = (newOpen) => {
     setOpenMenu(newOpen);
@@ -16,18 +16,20 @@ function Header({ showModal, user }) {
   return (
     <div className={cx("header")}>
       <div className={cx("header-content")}>
-        <Button
-          className={cx("create-btn")}
-          type="primary"
-          size="large"
-          onClick={showModal}
-        >
-          Tạo công việc
-        </Button>
+        {!admin && (
+          <Button
+            className={cx("create-btn")}
+            type="primary"
+            size="large"
+            onClick={showModal}
+          >
+            Tạo công việc
+          </Button>
+        )}
         <Popover
           content={<UserMenu setOpenMenu={setOpenMenu}></UserMenu>}
           trigger="click"
-          title={user.name}
+          title={user?.name}
           open={openMenu}
           onOpenChange={handleOpenChange}
         >

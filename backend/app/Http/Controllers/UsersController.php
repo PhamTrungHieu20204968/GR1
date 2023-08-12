@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\SignupRequest;
+
 use Illuminate\Http\Request;
 use App\Models\Users;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Share;
+use App\Models\History;
 use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
     private $users;
+    private $share;
+    private $history;
     public function __construct(){
-        $this->users = new Users();
+        $this->users = new Users();        
+        $this->share = new Share();
+        $this->history = new History();
     }
 
     /**
@@ -152,5 +156,24 @@ class UsersController extends Controller
          $list = $this->users->getAll($request->userId);
 
         return response()->json($list);
+    }
+
+    public function getTable()
+    {
+        //
+
+         $list = $this->users->getTable();
+
+        return response()->json($list);
+    }
+
+    public function deleteOne(Request $request)
+    {
+        //
+        $deleteShared = $this->share->deleteUser($request->userId);
+        $deleteHistory = $this->history->deleteUser($request->userId);
+        $deleted = $this->users->deleteOne($request->userId);
+
+        return response()->json($deleted);
     }
 }

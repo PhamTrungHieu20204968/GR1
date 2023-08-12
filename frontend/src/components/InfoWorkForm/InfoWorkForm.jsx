@@ -123,7 +123,6 @@ function InfoWorkForm({
         timeEnd: time[1].toDate("Y-m-d H:i:s"),
       })
       .then((res) => {
-        console.log(res);
         setWorks((prev) => {
           prev.filter((item) => {
             if (item.id === work.id) return res.data;
@@ -165,7 +164,7 @@ function InfoWorkForm({
       });
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    setOnEdit(false);
     setOpenModal(false);
   };
   const getShareList = async () => {
@@ -220,9 +219,6 @@ function InfoWorkForm({
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
       okText={onEdit ? "Lưu" : "OK"}
-      afterClose={() => {
-        setOnEdit(false);
-      }}
     >
       {!loading ? (
         <Form

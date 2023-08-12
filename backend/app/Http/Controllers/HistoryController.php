@@ -1,11 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\History;
 
 use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
+    private $history;
+    public function __construct(){
+        $this->history = new History();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -60,5 +65,13 @@ class HistoryController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function getTable()
+    {
+        //
+
+         $list = $this->history->getTable();
+
+        return response()->json($list);
     }
 }

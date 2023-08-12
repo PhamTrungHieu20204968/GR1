@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('work_id')->unsigned();
             $table->string('action');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-            $table->foreign('work_id')->references('id')->on('works')->onUpdate('cascade');
             $table->timestamps();
         });
     }

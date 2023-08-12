@@ -27,6 +27,13 @@ class Share extends Model
         return $deleted;
     }
 
+    public function deleteUser($id){
+    
+        $deleted = DB::table('share')->where('user_id', $id)->delete();
+    
+        return $deleted;
+    }
+
     public function getShareList($id){
     
         $list = DB::table('share')

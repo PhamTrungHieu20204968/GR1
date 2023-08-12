@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Works;
 use App\Models\Share;
 use App\Models\Users;
+use App\Models\History;
 use Illuminate\Http\Request;
 
 class WorksController extends Controller
@@ -12,10 +13,12 @@ class WorksController extends Controller
     private $works;
     private $share;
     private $users;
+    private $history;
     public function __construct(){
         $this->works = new Works();
         $this->share = new Share();
         $this->users = new Users();
+        $this->history = new History();
     }
     /**
      * Display a listing of the resource.
@@ -40,6 +43,7 @@ class WorksController extends Controller
             'timeEnd'=>$request->timeEnd,
         ];
         $res = $this->works->insertData($data);
+        $this->history->insertCreateData($res->user_id,$res->id);
 
         return response()->json($res);
     }
@@ -96,12 +100,12 @@ class WorksController extends Controller
     public function deleteOne(Request $request)
     {
         //
-        
         $deletedShareTable = $this->share->deleteWork($request->workId);
-        
-        $data =  $this->works->deleteOne($request->workId);
+        $deletedHistoryTable = $this->history->insertDeleteData($request->userId,$request->workId);
 
-        return response()->json($data);
+        $res =  $this->works->deleteOne($request->workId);
+
+        return response()->json($res);
 
     }
 
@@ -109,6 +113,7 @@ class WorksController extends Controller
     {
         //
         $deletedShareTable = $this->share->deleteWork($request->workId);
+        $deletedHistoryTable = $this->history->insertDeleteData($request->userId,$request->workId);
         
         $data =  $this->works->deleteOne($request->workId);
 
@@ -129,6 +134,7 @@ class WorksController extends Controller
             'timeEnd'=>$request->timeEnd,
         ];
         $res =  $this->works->updateOne($data);
+        $deletedHistoryTable = $this->history->insertUpdateData($request->userId,$request->workId);
 
        
         $res2 = $this->share->deleteWork($data['workId']);
@@ -158,6 +164,7 @@ class WorksController extends Controller
             array_push($shareData,$item);
         }
         $res2= $this->share->insertData($shareData);
+        $this->history->insertCreateData($res1->user_id,$res1->id);
         
 
         return response()->json($res1);
@@ -178,7 +185,7 @@ class WorksController extends Controller
             'timeStart'=>$request->timeStart,
             'timeEnd'=>$request->timeEnd,
         ];
-
+        
         $shareData=[];
         foreach ($data['share'] as $member) {
             $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $data['workId'],'role' => $data['role']];
@@ -187,6 +194,7 @@ class WorksController extends Controller
         $res2 = $this->share->deleteWork($data['workId']);
         $res3= $this->share->insertData($shareData);
         $res1 = $this->works->updateOne($data);
+        $deletedHistoryTable = $this->history->insertUpdateData($request->userId,$request->workId);
         
 
         return response()->json($res3);

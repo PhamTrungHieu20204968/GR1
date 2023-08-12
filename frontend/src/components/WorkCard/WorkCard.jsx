@@ -34,6 +34,7 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
     await axios
       .post("http://localhost:8000/api/work/delete", {
         workId,
+        userId: 1,
       })
       .then((res) => {
         setWorks((prev) => {
@@ -55,6 +56,7 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
     await axios
       .post("http://localhost:8000/api/work/deleteShare", {
         workId,
+        userId: 1,
       })
       .then((res) => {
         setWorks((prev) => {
