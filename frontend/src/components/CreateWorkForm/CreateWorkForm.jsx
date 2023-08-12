@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Input, DatePicker, Form, Select, Modal } from "antd";
 import axios from "axios";
 
-import styles from "./CreateWorkForm.scss";
+import styles from "./CreateWorkForm.module.scss";
 
 const cx = classNames.bind(styles);
 

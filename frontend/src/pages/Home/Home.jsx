@@ -74,7 +74,11 @@ function Home() {
   return (
     <div className={cx("home")}>
       {contextHolder}
-      <Header showModal={showModal} user={user}></Header>
+      <Header
+        showModal={showModal}
+        user={user}
+        messageApi={messageApi}
+      ></Header>
       <div className={cx("content")}>
         <div className={cx("header")}>
           <div className={cx("header-left")}>

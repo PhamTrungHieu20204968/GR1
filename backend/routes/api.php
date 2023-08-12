@@ -26,6 +26,7 @@ Route::prefix('user')->group(function () {
     Route::post('/getAll', [UsersController::class, 'getAll']);
     Route::get('/getTable', [UsersController::class, 'getTable']);
     Route::post('/deleteOne', [UsersController::class, 'deleteOne']);
+    Route::post('/updateOne', [UsersController::class, 'updateOne']);
 });
 
 Route::prefix('admin')->group(function () {

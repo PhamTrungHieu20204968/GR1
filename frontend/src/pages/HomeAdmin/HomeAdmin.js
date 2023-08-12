@@ -6,19 +6,9 @@ import { Badge, Space, Table, Button, Popconfirm, message } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./HomeAdmin.module.scss";
+import EditInfoUser from "../../components/EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
-
-const items = [
-  {
-    key: "1",
-    label: "Action 1",
-  },
-  {
-    key: "2",
-    label: "Action 2",
-  },
-];
 
 function HomeAdmin() {
   const [userList, setUserList] = useState([]);
@@ -27,7 +17,12 @@ function HomeAdmin() {
   const [loading, setLoading] = useState(true);
   const [currentId, setCurrentId] = useState();
   const [messageApi, contextHolder] = message.useMessage();
+  const [openModal, setOpenModal] = useState(false);
 
+  const handleEdit = (e) => {
+    getUserId(e);
+    setOpenModal(true);
+  };
   const handleDelete = async () => {
     await axios
       .post("http://localhost:8000/api/user/deleteOne", {
@@ -49,7 +44,6 @@ function HomeAdmin() {
   };
 
   const getUserId = (e) => {
-    let i = 0;
     let currentNode = e.target.parentNode;
     while (!currentNode.className.includes("ant-table-row-level-0")) {
       currentNode = currentNode.parentNode;
@@ -142,7 +136,9 @@ function HomeAdmin() {
       key: "operation",
       render: () => (
         <Space>
-          <Button type="primary">Edit</Button>
+          <Button type="primary" onClick={(e) => handleEdit(e)}>
+            Edit
+          </Button>
           <Popconfirm
             title="Xóa người dùng"
             description="Bạn có chắc chắn muốn xóa?"
@@ -192,7 +188,7 @@ function HomeAdmin() {
     setLoading(true);
     getUser();
     const data = [];
-    userList.forEach((item) => {
+    userList?.forEach((item) => {
       data.push({
         key: item.id,
         userId: item.id,
@@ -219,6 +215,20 @@ function HomeAdmin() {
         }}
         dataSource={table}
       />
+      {openModal && (
+        <EditInfoUser
+          openModal={openModal}
+          setIsModalOpen={setOpenModal}
+          user={
+            userList.filter((item) => {
+              return item.id === currentId;
+            })[0]
+          }
+          onEdit
+          messageApi={messageApi}
+          setUserList={setUserList}
+        ></EditInfoUser>
+      )}
     </div>
   );
 }

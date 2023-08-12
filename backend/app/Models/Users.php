@@ -87,4 +87,18 @@ class Users extends Model
        
         return $users;
     }
+
+    public function updateOne($data){
+
+        $status = DB::table('users')
+        ->where('id', '=', $data["id"])
+        ->update([
+            'password'=> $data["password"],
+            'name' => $data["name"],
+            'age' => $data["age"],
+            'sex' => $data["sex"]
+        ]);
+       
+        return $status;
+    }
 }

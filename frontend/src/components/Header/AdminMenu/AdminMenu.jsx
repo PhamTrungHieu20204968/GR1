@@ -3,12 +3,12 @@ import { Menu } from "antd";
 import { FormOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-import styles from "./UserMenu.module.scss";
+import styles from "./Admin.module.scss";
 import EditInfoUser from "../../EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
 
-function UserMenu({ setOpenMenu, messageApi, user }) {
+function AdminMenu({ setOpenMenu, messageApi }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function getItem(label, key, icon, children, type) {
@@ -22,7 +22,7 @@ function UserMenu({ setOpenMenu, messageApi, user }) {
   }
 
   const items = [
-    getItem("Thông tin người dùng", "edit", <FormOutlined />),
+    getItem("Đổi mật khẩu", "edit", <FormOutlined />),
     {
       type: "divider",
     },
@@ -31,7 +31,7 @@ function UserMenu({ setOpenMenu, messageApi, user }) {
 
   const onSelect = (e) => {
     if (e.key === "edit") {
-      setIsModalOpen(true);
+      //   setIsModalOpen(true);
     }
     setOpenMenu(false);
   };
@@ -53,11 +53,10 @@ function UserMenu({ setOpenMenu, messageApi, user }) {
           setIsModalOpen={setIsModalOpen}
           onEdit
           messageApi={messageApi}
-          user={user}
         ></EditInfoUser>
       )}
     </div>
   );
 }
 
-export default UserMenu;
+export default AdminMenu;

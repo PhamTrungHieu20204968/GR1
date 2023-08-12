@@ -5,10 +5,11 @@ import { useState } from "react";
 
 import styles from "./Header.module.scss";
 import UserMenu from "./UserMenu/UserMenu";
+import AdminMenu from "./AdminMenu/AdminMenu";
 
 const cx = classNames.bind(styles);
 
-function Header({ showModal, user, admin = false }) {
+function Header({ showModal, user, admin = false, messageApi }) {
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenChange = (newOpen) => {
     setOpenMenu(newOpen);
@@ -27,7 +28,20 @@ function Header({ showModal, user, admin = false }) {
           </Button>
         )}
         <Popover
-          content={<UserMenu setOpenMenu={setOpenMenu}></UserMenu>}
+          content={
+            admin ? (
+              <AdminMenu
+                setOpenMenu={setOpenMenu}
+                messageApi={messageApi}
+              ></AdminMenu>
+            ) : (
+              <UserMenu
+                setOpenMenu={setOpenMenu}
+                messageApi={messageApi}
+                user={user}
+              ></UserMenu>
+            )
+          }
           trigger="click"
           title={user?.name}
           open={openMenu}

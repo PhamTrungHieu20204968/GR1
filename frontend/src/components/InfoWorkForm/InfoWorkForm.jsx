@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 import * as dayjs from "dayjs";
 
-import styles from "./InfoWorkForm.scss";
+import styles from "./InfoWorkForm.module.scss";
 import { useStateContext } from "../../contexts/ContextProvider";
 
 const cx = classNames.bind(styles);

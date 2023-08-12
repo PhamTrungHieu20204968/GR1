@@ -176,4 +176,34 @@ class UsersController extends Controller
 
         return response()->json($deleted);
     }
+
+    public function updateOne(Request $request)
+    {
+        //
+        $rules = [
+            'name' => 'required',
+            'password' => 'required|min:8',
+        ];
+
+        $messages = [
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'password.min' => 'Mật khẩu cần có ít nhât :min ký tự',
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$messages);
+
+        $validator->validate();
+
+        $data =  [
+            'id' => $request->userId,
+            'password' => $request->password,
+            'name' => $request->name,
+            'age' => $request->age,
+            'sex' => $request->sex,
+        ];
+        $user = $this->users->updateOne($data);
+
+        return response()->json($user);
+    }
 }
