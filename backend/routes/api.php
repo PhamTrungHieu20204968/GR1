@@ -49,6 +49,7 @@ Route::prefix('work')->group(function () {
 
 Route::prefix('share')->group(function () {
     Route::post('/getShareList', [ShareController::class, 'getShareList']);
+    Route::post('/getByUserId', [ShareController::class, 'getByUserId']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

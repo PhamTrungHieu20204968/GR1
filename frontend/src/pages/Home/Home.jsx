@@ -38,11 +38,27 @@ function Home() {
     setLoading(true);
     await axios
       .post("http://localhost:8000/api/work/get", {
-        userId: user.id || 1,
+        userId: user.id,
       })
       .then((res) => {
         setWorks(res.data);
         classifyWorks(res.data);
+      })
+      .then(() => {
+        getShareWorks();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const getShareWorks = async () => {
+    await axios
+      .post("http://localhost:8000/api/share/getByUserId", {
+        userId: user.id,
+      })
+      .then((res) => {
+        setShareWork((prev) => prev.concat(res.data));
       })
       .catch((err) => {
         console.error(err);
@@ -64,6 +80,7 @@ function Home() {
 
   useEffect(() => {
     getWorks();
+    console.log(shareWork);
   }, [JSON.stringify(works)]);
 
   // useEffect(() => {

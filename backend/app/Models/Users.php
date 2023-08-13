@@ -47,6 +47,7 @@ class Users extends Model
                 'account' => $data['account'],
                 'password' => $data['password'],
                 'name' => $data['name'],
+                'created_at' => date('Y-m-d H:i:s'),
         ]);
 
         $token = bin2hex(random_bytes(16));
@@ -96,7 +97,8 @@ class Users extends Model
             'password'=> $data["password"],
             'name' => $data["name"],
             'age' => $data["age"],
-            'sex' => $data["sex"]
+            'sex' => $data["sex"],
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
        
         return $status;

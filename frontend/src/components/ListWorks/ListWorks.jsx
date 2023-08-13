@@ -10,6 +10,7 @@ function ListWorks({ showModal, works, setWorks, messageApi }) {
   return (
     <Row gutter={[16, 16]} style={{ flexWrap: "wrap" }}>
       {works?.map((work, index) => {
+        console.log(work);
         return (
           <Col key={work.id} xs={24} sm={12} md={12} lg={6} xl={4} order={2}>
             <WorkCard

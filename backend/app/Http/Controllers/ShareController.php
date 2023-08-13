@@ -75,4 +75,12 @@ class ShareController extends Controller
 
         return response()->json($res);
     }
+
+    public function getByUserId(Request $request)
+    {
+        //
+        $res = $this->share->getByUserId($request->userId);
+
+        return response()->json($res);
+    }
 }

@@ -18,7 +18,6 @@ const cx = classNames.bind(styles);
 function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
   const [openInfor, setOpenInfor] = useState(false);
   const [onEdit, setOnEdit] = useState(false);
-
   const showInfor = (e) => {
     setOpenInfor(true);
   };

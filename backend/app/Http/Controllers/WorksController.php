@@ -160,7 +160,7 @@ class WorksController extends Controller
 
         $shareData=[];
         foreach ($data['share'] as $member) {
-            $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $res1->id,'role' => $data['role']];
+            $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $res1->id,'role' => $data['role'],'created_at' => date('Y-m-d H:i:s')];
             array_push($shareData,$item);
         }
         $res2= $this->share->insertData($shareData);
@@ -188,7 +188,7 @@ class WorksController extends Controller
         
         $shareData=[];
         foreach ($data['share'] as $member) {
-            $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $data['workId'],'role' => $data['role']];
+            $item = ['user_id' => $this->users->getUserId($member), 'work_id' => $data['workId'],'role' => $data['role'],'created_at' => date('Y-m-d H:i:s')];
             array_push($shareData,$item);
         }
         $res2 = $this->share->deleteWork($data['workId']);

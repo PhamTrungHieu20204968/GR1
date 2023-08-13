@@ -21,6 +21,7 @@ class Works extends Model
             'type'=>$data['type'],
             'start'=>date('Y-m-d H:i:s' , strtotime($data['timeStart'])),
             'end'=>date('Y-m-d H:i:s' , strtotime($data['timeEnd'])),
+            'created_at' => date('Y-m-d H:i:s'),
     ]);
 
     return $status;
@@ -52,6 +53,7 @@ class Works extends Model
                 'type'=>$data['type'],
                 'start'=>date('Y-m-d H:i:s' , strtotime($data['timeStart'])),
                 'end'=>date('Y-m-d H:i:s' , strtotime($data['timeEnd'])),
+                'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
         return $affected;

@@ -44,4 +44,14 @@ class Share extends Model
     
         return $list;
     }
+    public function getByUserId($id){
+    
+        $list = DB::table('share')
+        ->join('works', 'works.id', '=', 'share.work_id')
+        ->select('works.*', 'share.role')
+        ->where('share.user_id','=',$id)
+        ->get();;
+    
+        return $list;
+    }
 }
