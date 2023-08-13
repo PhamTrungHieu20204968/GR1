@@ -44,9 +44,6 @@ function Home() {
         setWorks(res.data);
         classifyWorks(res.data);
       })
-      .then(() => {
-        getShareWorks();
-      })
       .catch((err) => {
         console.error(err);
       });
@@ -80,6 +77,7 @@ function Home() {
 
   useEffect(() => {
     getWorks();
+    getShareWorks();
   }, [JSON.stringify(works)]);
 
   useEffect(() => {
@@ -128,6 +126,7 @@ function Home() {
               showModal={showModal}
               setWorks={setWorks}
               messageApi={messageApi}
+              user={user}
             ></ListWorks>
           )}
         </div>

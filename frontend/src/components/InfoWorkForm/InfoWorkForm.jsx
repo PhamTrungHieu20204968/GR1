@@ -6,7 +6,6 @@ import axios from "axios";
 import * as dayjs from "dayjs";
 
 import styles from "./InfoWorkForm.module.scss";
-import { useStateContext } from "../../contexts/ContextProvider";
 
 const cx = classNames.bind(styles);
 
@@ -46,6 +45,7 @@ function InfoWorkForm({
   setWorks,
   messageApi,
   onEdit = false,
+  user
 }) {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
@@ -72,7 +72,6 @@ function InfoWorkForm({
     },
   ];
 
-  const { user } = useStateContext();
   const [setOpenModal, setOnEdit] = callBack;
 
   const submitData = async (data) => {
@@ -82,7 +81,7 @@ function InfoWorkForm({
     await axios
       .post("http://localhost:8000/api/work/update", {
         workId: work.id,
-        userId: 1,
+        userId: user.id,
         name,
         description,
         type,
@@ -113,7 +112,7 @@ function InfoWorkForm({
     await axios
       .post("http://localhost:8000/api/work/updateShare", {
         workId: work.id,
-        userId: 1,
+        userId: user.id,
         name,
         description,
         type,
@@ -193,7 +192,7 @@ function InfoWorkForm({
   const getUser = async () => {
     await axios
       .post("http://localhost:8000/api/user/getAll", {
-        userId: 1,
+        userId: user.id,
       })
       .then((res) => {
         const _options = [];

@@ -15,15 +15,28 @@ import InfoWorkForm from "../../components/InfoWorkForm/InfoWorkForm";
 
 const cx = classNames.bind(styles);
 
-function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
+function WorkCard({
+  type = "default",
+  showModal,
+  work,
+  setWorks,
+  messageApi,
+  user,
+}) {
   const [openInfor, setOpenInfor] = useState(false);
   const [onEdit, setOnEdit] = useState(false);
   const showInfor = (e) => {
     setOpenInfor(true);
   };
-
   const handleDelete = (event) => {
     event.stopPropagation();
+    if (work?.role < "3" || user?.id !== work.user_id) {
+      messageApi.open({
+        type: "info",
+        content: "Bạn không có quyền này!",
+      });
+      return;
+    }
     if (work?.type === "1") {
       deleteMyWork(work.id);
     } else deleteShareWork(work.id);
@@ -33,11 +46,11 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
     await axios
       .post("http://localhost:8000/api/work/delete", {
         workId,
-        userId: 1,
+        userId: user.id,
       })
       .then((res) => {
         setWorks((prev) => {
-          return prev.filter((item, index) => {
+          return prev.filter((item) => {
             if (item.id !== work.id) return item;
           });
         });
@@ -55,11 +68,11 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
     await axios
       .post("http://localhost:8000/api/work/deleteShare", {
         workId,
-        userId: 1,
+        userId: user.id,
       })
       .then((res) => {
         setWorks((prev) => {
-          return prev.filter((item, index) => {
+          return prev.filter((item) => {
             if (item.id !== work.id) return item;
           });
         });
@@ -88,6 +101,13 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
               key="edit"
               onClick={(e) => {
                 e.stopPropagation();
+                if (work?.role < "2" || user?.id !== work.user_id) {
+                  messageApi.open({
+                    type: "info",
+                    content: "Bạn không có quyền này!",
+                  });
+                  return;
+                }
                 setOnEdit(true);
                 showInfor();
               }}
@@ -145,6 +165,7 @@ function WorkCard({ type = "default", showModal, work, setWorks, messageApi }) {
           setWorks={setWorks}
           messageApi={messageApi}
           onEdit={onEdit}
+          user={user}
         ></InfoWorkForm>
       )}
     </div>

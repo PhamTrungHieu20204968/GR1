@@ -68,7 +68,7 @@ function CreateWorkForm({
     const { name, description, time, type } = data;
     await axios
       .post("http://localhost:8000/api/work/create", {
-        userId: 1,
+        userId: userId,
         name,
         description,
         type,
@@ -91,7 +91,7 @@ function CreateWorkForm({
     const { name, description, time, type, role, share } = data;
     await axios
       .post("http://localhost:8000/api/work/createShare", {
-        userId: 1,
+        userId: userId,
         name,
         description,
         type,
@@ -140,14 +140,13 @@ function CreateWorkForm({
       });
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpenModal(false);
   };
 
   const getUser = async () => {
     await axios
       .post("http://localhost:8000/api/user/getAll", {
-        userId: 1,
+        userId: userId,
       })
       .then((res) => {
         const _options = [];

@@ -59,7 +59,6 @@ function LoginAdmin() {
       .catch((e) => {
         const response = e.response;
         if (response) {
-          console.log(response);
           const errors = response.data.errors;
           if (errors.account) {
             setAccountError(true);

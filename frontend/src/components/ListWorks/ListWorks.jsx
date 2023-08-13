@@ -6,11 +6,10 @@ import WorkCard from "../WorkCard/WorkCard";
 
 const cx = classNames.bind(styles);
 
-function ListWorks({ showModal, works, setWorks, messageApi }) {
+function ListWorks({ showModal, works, setWorks, messageApi, user }) {
   return (
     <Row gutter={[16, 16]} style={{ flexWrap: "wrap" }}>
       {works?.map((work, index) => {
-        console.log(work);
         return (
           <Col key={work.id} xs={24} sm={12} md={12} lg={6} xl={4} order={2}>
             <WorkCard
@@ -19,6 +18,7 @@ function ListWorks({ showModal, works, setWorks, messageApi }) {
               showModal={showModal}
               setWorks={setWorks}
               messageApi={messageApi}
+              user={user}
             ></WorkCard>
           </Col>
         );
