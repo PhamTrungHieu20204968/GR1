@@ -13,7 +13,7 @@ import EditInfoUser from "../../components/EditInfoUser/EditInfoUser";
 const cx = classNames.bind(styles);
 
 function HomeAdmin() {
-  const { user, token, setUser } = useStateContext();
+  const { admin, token, setAdmin } = useStateContext();
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   const [table, setTable] = useState();
@@ -235,16 +235,21 @@ function HomeAdmin() {
     getHistory();
   }, [JSON.stringify(userList)]);
 
-  // useEffect(() => {
-  //   if (!token || !user.id) {
-  //     return navigate("/LoginAdmin");
-  //   }
-  // });
+  useEffect(() => {
+    if (!token || !admin.id) {
+      return navigate("/LoginAdmin");
+    }
+  });
 
   return (
     <div className={cx("home-admin")}>
       {contextHolder}
-      <Header setUser={setUser} user={user} admin></Header>
+      <Header
+        setUser={setAdmin}
+        user={admin}
+        admin
+        messageApi={messageApi}
+      ></Header>
       <h1 className={cx("table-title")}>Thông tin người dùng</h1>
       <Table
         loading={loading}

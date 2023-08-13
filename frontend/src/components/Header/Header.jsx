@@ -34,6 +34,7 @@ function Header({ showModal, user, admin = false, messageApi, setUser }) {
                 setOpenMenu={setOpenMenu}
                 messageApi={messageApi}
                 setUser={setUser}
+                user={user}
               ></AdminMenu>
             ) : (
               <UserMenu

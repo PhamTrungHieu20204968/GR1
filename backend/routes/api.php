@@ -27,10 +27,14 @@ Route::prefix('user')->group(function () {
     Route::get('/getTable', [UsersController::class, 'getTable']);
     Route::post('/deleteOne', [UsersController::class, 'deleteOne']);
     Route::post('/updateOne', [UsersController::class, 'updateOne']);
+    Route::post('/getId', [UsersController::class, 'getId']);
+    Route::post('/changePass', [UsersController::class, 'changePass']);
 });
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminsController::class, 'login']);
+    Route::post('/getId', [AdminsController::class, 'getId']);
+    Route::post('/changePass', [AdminsController::class, 'changePass']);
 });
 
 Route::prefix('history')->group(function () {

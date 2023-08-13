@@ -95,3 +95,12 @@
     margin-left: 8px;
   }
 }
+.forgot-pass-link {
+  text-decoration: underline;
+  color: #43546f;
+  margin: 0;
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
+}

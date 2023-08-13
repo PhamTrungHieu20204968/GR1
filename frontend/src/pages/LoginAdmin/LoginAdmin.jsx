@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { Container, Row, Col } from "react-bootstrap";
+import { message } from "antd";
 import { EyeTwoTone, EyeInvisibleTwoTone } from "@ant-design/icons";
 
 import styles from "./LoginAdmin.module.scss";
 import { useStateContext } from "../../contexts/ContextProvider";
+import ChangePassForm from "../../components/ChangePassForm/ChangePassForm";
 
 const cx = classNames.bind(styles);
 
@@ -20,7 +22,9 @@ function LoginAdmin() {
   const [accountErrorMessage, setAccountErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const { setToken, setUser } = useStateContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const { setToken, setAdmin } = useStateContext();
 
   const handleChangeAccount = (e) => {
     setAccountError(false);
@@ -40,7 +44,7 @@ function LoginAdmin() {
       })
       .then((res) => {
         if (res.data !== false) {
-          setUser(res.data.user);
+          setAdmin(res.data.user);
           setToken(res.data.token);
           Swal.fire({ title: "Đăng nhập thành công!", icon: "success" });
           navigate("/HomeAdmin");
@@ -74,6 +78,7 @@ function LoginAdmin() {
 
   return (
     <div className={cx("login")}>
+      {contextHolder}
       <Container>
         <Row className="justify-content-md-center align-items-center">
           <Col md="4">
@@ -123,10 +128,24 @@ function LoginAdmin() {
               <div className={cx("form-btn")} onClick={handleSubmit}>
                 Đăng nhập
               </div>
+              <h3
+                className={cx("forgot-pass-link")}
+                onClick={() => setIsModalOpen(true)}
+              >
+                Quên mật khẩu?
+              </h3>
             </div>
           </Col>
         </Row>
       </Container>
+      {isModalOpen && (
+        <ChangePassForm
+          openModal={isModalOpen}
+          messageApi={messageApi}
+          setIsModalOpen={setIsModalOpen}
+          admin
+        ></ChangePassForm>
+      )}
     </div>
   );
 }

@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./Admin.module.scss";
-import EditInfoUser from "../../EditInfoUser/EditInfoUser";
+import ChangePassForm from "../../ChangePassForm/ChangePassForm";
 
 const cx = classNames.bind(styles);
 
-function AdminMenu({ setOpenMenu, messageApi, setUser }) {
+function AdminMenu({ setOpenMenu, messageApi, setUser, user }) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -57,6 +57,16 @@ function AdminMenu({ setOpenMenu, messageApi, setUser }) {
         mode="inline"
         items={items}
       />
+
+      {isModalOpen && (
+        <ChangePassForm
+          openModal={isModalOpen}
+          messageApi={messageApi}
+          userId={user?.id}
+          setIsModalOpen={setIsModalOpen}
+          admin
+        ></ChangePassForm>
+      )}
     </div>
   );
 }

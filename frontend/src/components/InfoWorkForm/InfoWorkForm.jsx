@@ -45,7 +45,7 @@ function InfoWorkForm({
   setWorks,
   messageApi,
   onEdit = false,
-  user
+  user,
 }) {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
@@ -221,7 +221,7 @@ function InfoWorkForm({
     >
       {!loading ? (
         <Form
-          name="create_work_form"
+          name="info_work_form"
           {...formItemLayout}
           style={{
             maxWidth: 600,

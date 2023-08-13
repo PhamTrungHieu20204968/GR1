@@ -95,4 +95,21 @@ class AdminsController extends Controller
         
        return response()->json($res);
     }
+    
+    public function getId(Request $request)
+    {
+    
+        $id = $this->admins->getId($request->account);
+
+       return response()->json($id);
+    }
+
+    public function changePass(Request $request)
+    {
+
+        $res = $this->admins->changePass($request->id,$request->pass);
+
+        return response()->json($res);
+    }
+
 }

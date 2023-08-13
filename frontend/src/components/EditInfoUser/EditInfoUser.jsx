@@ -120,7 +120,7 @@ function EditInfoUser({
     >
       {!loading ? (
         <Form
-          name="create_work_form"
+          name="user_update_form"
           {...formItemLayout}
           style={{
             maxWidth: 600,
@@ -156,7 +156,7 @@ function EditInfoUser({
             ]}
             initialValue={user?.password}
           >
-            <Input disabled={!onEdit} placeholder={"Không có"} />
+            <Input.Password disabled={true} placeholder={"Không có"} />
           </Form.Item>
 
           <Form.Item name="sex" label="Giới tính" initialValue={user?.sex}>

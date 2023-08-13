@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { Container, Row, Col } from "react-bootstrap";
+import { message } from "antd";
 import { EyeTwoTone, EyeInvisibleTwoTone } from "@ant-design/icons";
 
 import styles from "./Login.module.scss";
 import LogoFaceBook from "../../assets/images/facebook.png";
 import LogoGoogle from "../../assets/images/Gmail_Logo_512px.png";
+import ChangePassForm from "../../components/ChangePassForm/ChangePassForm";
 import { useStateContext } from "../../contexts/ContextProvider";
 
 const cx = classNames.bind(styles);
@@ -23,6 +25,8 @@ function Login() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const { setToken, setUser } = useStateContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const handleChangeAccount = (e) => {
     setAccountError(false);
@@ -76,6 +80,7 @@ function Login() {
 
   return (
     <div className={cx("login")}>
+      {contextHolder}
       <Container>
         <Row className="justify-content-md-center align-items-center">
           <Col md="4">
@@ -142,11 +147,23 @@ function Login() {
               <p className={cx("navigate-sign-up-text")}>
                 Chưa có tài khoản? <Link to="/SignUp">Đăng ký</Link>
               </p>
-              <h3 className={cx("forgot-pass-link")}>Quên mật khẩu?</h3>
+              <h3
+                className={cx("forgot-pass-link")}
+                onClick={() => setIsModalOpen(true)}
+              >
+                Quên mật khẩu?
+              </h3>
             </div>
           </Col>
         </Row>
       </Container>
+      {isModalOpen && (
+        <ChangePassForm
+          openModal={isModalOpen}
+          messageApi={messageApi}
+          setIsModalOpen={setIsModalOpen}
+        ></ChangePassForm>
+      )}
     </div>
   );
 }

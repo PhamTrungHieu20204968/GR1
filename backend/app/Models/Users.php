@@ -103,4 +103,19 @@ class Users extends Model
        
         return $status;
     }
+
+    public function getId($account){
+        $id = DB::table($this->table)
+        ->select('id')
+        ->where('account',$account)
+        ->get();
+        return $id;
+    }
+
+    public function changePass($id,$pass){
+        $status = DB::table($this->table)
+        ->where('id', $id)
+        ->update(['password' => $pass]);
+        return $status;
+    }
 }

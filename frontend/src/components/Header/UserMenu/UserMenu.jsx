@@ -1,10 +1,11 @@
 import classNames from "classnames/bind";
 import { Menu } from "antd";
-import { FormOutlined, LogoutOutlined } from "@ant-design/icons";
+import { FormOutlined, LogoutOutlined, EditOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./UserMenu.module.scss";
+import ChangePassForm from "../../ChangePassForm/ChangePassForm";
 import EditInfoUser from "../../EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
@@ -12,6 +13,7 @@ const cx = classNames.bind(styles);
 function UserMenu({ setOpenMenu, messageApi, user, setUser }) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [changePassModalOpen, setChangePasssModalOpen] = useState(false);
 
   function getItem(label, key, icon, children, type) {
     return {
@@ -25,6 +27,7 @@ function UserMenu({ setOpenMenu, messageApi, user, setUser }) {
 
   const items = [
     getItem("Thông tin người dùng", "edit", <FormOutlined />),
+    getItem("Thay đổi mật khẩu", "changePass", <EditOutlined />),
     {
       type: "divider",
     },
@@ -40,6 +43,9 @@ function UserMenu({ setOpenMenu, messageApi, user, setUser }) {
         navigate("/Login");
         localStorage.removeItem("ACCESS_TOKEN");
         setUser({});
+        break;
+      case "changePass":
+        setChangePasssModalOpen(true);
         break;
       default:
         break;
@@ -66,6 +72,15 @@ function UserMenu({ setOpenMenu, messageApi, user, setUser }) {
           messageApi={messageApi}
           user={user}
         ></EditInfoUser>
+      )}
+
+      {changePassModalOpen && (
+        <ChangePassForm
+          openModal={changePassModalOpen}
+          messageApi={messageApi}
+          userId={user?.id}
+          setIsModalOpen={setChangePasssModalOpen}
+        ></ChangePassForm>
       )}
     </div>
   );

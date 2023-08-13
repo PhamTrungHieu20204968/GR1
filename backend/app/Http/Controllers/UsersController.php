@@ -206,4 +206,20 @@ class UsersController extends Controller
 
         return response()->json($user);
     }
+
+    public function getId(Request $request)
+    {
+    
+        $id = $this->users->getId($request->account);
+
+       return response()->json($id);
+    }
+
+    public function changePass(Request $request)
+    {
+
+        $res = $this->users->changePass($request->id,$request->pass);
+
+        return response()->json($res);
+    }
 }
