@@ -9,7 +9,7 @@ import AdminMenu from "./AdminMenu/AdminMenu";
 
 const cx = classNames.bind(styles);
 
-function Header({ showModal, user, admin = false, messageApi }) {
+function Header({ showModal, user, admin = false, messageApi, setUser }) {
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenChange = (newOpen) => {
     setOpenMenu(newOpen);
@@ -33,12 +33,14 @@ function Header({ showModal, user, admin = false, messageApi }) {
               <AdminMenu
                 setOpenMenu={setOpenMenu}
                 messageApi={messageApi}
+                setUser={setUser}
               ></AdminMenu>
             ) : (
               <UserMenu
                 setOpenMenu={setOpenMenu}
                 messageApi={messageApi}
                 user={user}
+                setUser={setUser}
               ></UserMenu>
             )
           }

@@ -3,14 +3,18 @@ import axios from "axios";
 import classNames from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { Badge, Space, Table, Button, Popconfirm, message } from "antd";
+import { useNavigate } from "react-router-dom";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./HomeAdmin.module.scss";
+import { useStateContext } from "../../contexts/ContextProvider";
 import EditInfoUser from "../../components/EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
 
 function HomeAdmin() {
+  const { user, token, setUser } = useStateContext();
+  const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   const [table, setTable] = useState();
   const [historyList, setHistoryList] = useState([]);
@@ -57,16 +61,34 @@ function HomeAdmin() {
         title: "Date",
         dataIndex: "date",
         key: "date",
+        sorter: (a, b) => a.date > b.date,
       },
       {
         title: "Work id",
         dataIndex: "workID",
         key: "workID",
+        sorter: (a, b) => a.workID - b.workID,
       },
       {
         title: "Action",
         dataIndex: "action",
         key: "action",
+        filters: [
+          {
+            text: "Create",
+            value: "Create",
+          },
+          {
+            text: "Update",
+            value: "Update",
+          },
+          {
+            text: "Delete",
+            value: "Delete",
+          },
+        ],
+        onFilter: (value, record) => record.address.startsWith(value),
+        filterSearch: true,
       },
 
       {
@@ -113,17 +135,28 @@ function HomeAdmin() {
       title: "User Id",
       dataIndex: "userId",
       key: "userId",
+      sorter: (a, b) => a.userId - b.userId,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      filters: userList.reduce((res, item) => {
+        return [...res, { text: item.name, value: item.name }];
+      }, []),
+      onFilter: (value, record) => record.name.includes(value),
+      filterSearch: true,
     },
 
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      filters: userList.reduce((res, item) => {
+        return [...res, { text: item.account, value: item.account }];
+      }, []),
+      onFilter: (value, record) => record.email.includes(value),
+      filterSearch: true,
     },
 
     {
@@ -202,10 +235,16 @@ function HomeAdmin() {
     getHistory();
   }, [JSON.stringify(userList)]);
 
+  // useEffect(() => {
+  //   if (!token || !user.id) {
+  //     return navigate("/LoginAdmin");
+  //   }
+  // });
+
   return (
     <div className={cx("home-admin")}>
       {contextHolder}
-      <Header admin></Header>
+      <Header setUser={setUser} user={user} admin></Header>
       <h1 className={cx("table-title")}>Thông tin người dùng</h1>
       <Table
         loading={loading}

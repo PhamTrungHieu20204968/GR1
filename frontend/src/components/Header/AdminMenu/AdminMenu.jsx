@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
 import { Menu } from "antd";
 import { FormOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./Admin.module.scss";
@@ -8,7 +9,8 @@ import EditInfoUser from "../../EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
 
-function AdminMenu({ setOpenMenu, messageApi }) {
+function AdminMenu({ setOpenMenu, messageApi, setUser }) {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function getItem(label, key, icon, children, type) {
@@ -30,8 +32,17 @@ function AdminMenu({ setOpenMenu, messageApi }) {
   ];
 
   const onSelect = (e) => {
-    if (e.key === "edit") {
-      //   setIsModalOpen(true);
+    switch (e.key) {
+      case "edit":
+        setIsModalOpen(true);
+        break;
+      case "logout":
+        navigate("/LoginAdmin");
+        localStorage.removeItem("ACCESS_TOKEN");
+        setUser({});
+        break;
+      default:
+        break;
     }
     setOpenMenu(false);
   };
@@ -46,15 +57,6 @@ function AdminMenu({ setOpenMenu, messageApi }) {
         mode="inline"
         items={items}
       />
-
-      {isModalOpen && (
-        <EditInfoUser
-          openModal={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          onEdit
-          messageApi={messageApi}
-        ></EditInfoUser>
-      )}
     </div>
   );
 }

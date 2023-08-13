@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { Container, Row, Col } from "react-bootstrap";

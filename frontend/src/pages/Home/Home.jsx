@@ -15,7 +15,7 @@ const cx = classNames.bind(styles);
 const { Search } = Input;
 
 function Home() {
-  const { user, token } = useStateContext();
+  const { user, token, setUser } = useStateContext();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [works, setWorks] = useState();
@@ -80,14 +80,13 @@ function Home() {
 
   useEffect(() => {
     getWorks();
-    console.log(shareWork);
   }, [JSON.stringify(works)]);
 
-  // useEffect(() => {
-  //   if (!token || !user.id) {
-  //     return navigate("/Login");
-  //   }
-  // });
+  useEffect(() => {
+    if (!token || !user.id) {
+      return navigate("/Login");
+    }
+  });
   return (
     <div className={cx("home")}>
       {contextHolder}
@@ -95,6 +94,7 @@ function Home() {
         showModal={showModal}
         user={user}
         messageApi={messageApi}
+        setUser={setUser}
       ></Header>
       <div className={cx("content")}>
         <div className={cx("header")}>

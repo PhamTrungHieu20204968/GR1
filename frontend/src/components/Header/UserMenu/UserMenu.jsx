@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
 import { Menu } from "antd";
 import { FormOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./UserMenu.module.scss";
@@ -8,7 +9,8 @@ import EditInfoUser from "../../EditInfoUser/EditInfoUser";
 
 const cx = classNames.bind(styles);
 
-function UserMenu({ setOpenMenu, messageApi, user }) {
+function UserMenu({ setOpenMenu, messageApi, user, setUser }) {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function getItem(label, key, icon, children, type) {
@@ -30,8 +32,17 @@ function UserMenu({ setOpenMenu, messageApi, user }) {
   ];
 
   const onSelect = (e) => {
-    if (e.key === "edit") {
-      setIsModalOpen(true);
+    switch (e.key) {
+      case "edit":
+        setIsModalOpen(true);
+        break;
+      case "logout":
+        navigate("/Login");
+        localStorage.removeItem("ACCESS_TOKEN");
+        setUser({});
+        break;
+      default:
+        break;
     }
     setOpenMenu(false);
   };
